@@ -1,12 +1,12 @@
-import { Entity, PrimaryColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { Field, ID, ObjectType } from "type-graphql";
 
 @Entity()
 @ObjectType({ description: "The link model" })
 export class Link extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   @Field(() => ID)
-  id: string;
+  id: number;
 
   @Column()
   @Field()
