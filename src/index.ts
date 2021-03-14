@@ -6,13 +6,14 @@ import { buildSchema } from "type-graphql";
 import { InfoResolver } from "./resolvers/Info";
 import { Link } from "./entity/Link";
 import { FeedResolver } from "./resolvers/Feed";
+import { PostResolver } from "./resolvers/Post";
 
 const main = async () => {
   // db connection
-  const connection = await createConnection({
+  await createConnection({
     type: "postgres",
     url: "postgresql://postgres:postgres@localhost:5432/tgraphql",
-    logging: true,
+    logging: false,
     synchronize: true,
     entities: [Link],
   });
@@ -23,7 +24,7 @@ const main = async () => {
   // Apollo
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [InfoResolver, FeedResolver],
+      resolvers: [InfoResolver, FeedResolver, PostResolver],
       validate: false,
     }),
   });
