@@ -8,6 +8,8 @@ import { Link } from "./entity/Link";
 import { FeedResolver } from "./resolvers/Feed";
 import { PostResolver } from "./resolvers/Post";
 import { User } from "./entity/User";
+import { AuthPayload } from "./entity/AuthPayload";
+import { SignUpResolver } from "./resolvers/SignUp";
 
 const main = async () => {
   // db connection
@@ -16,7 +18,7 @@ const main = async () => {
     url: "postgresql://postgres:postgres@localhost:5432/tgraphql",
     logging: true,
     synchronize: true,
-    entities: [Link, User],
+    entities: [Link, User, AuthPayload],
   });
 
   // app
@@ -25,7 +27,7 @@ const main = async () => {
   // Apollo
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [InfoResolver, FeedResolver, PostResolver],
+      resolvers: [InfoResolver, FeedResolver, PostResolver, SignUpResolver],
       validate: false,
     }),
   });

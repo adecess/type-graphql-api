@@ -8,18 +8,22 @@ import {
 } from "typeorm";
 import { Link } from "./Link";
 
+@ObjectType({ description: "The user model" })
 @Entity()
-@ObjectType()
 export class User extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
   @Field()
-  @Column("text", { unique: true })
+  @Column()
+  name: string;
+
+  @Field()
+  @Column({ unique: true })
   email: string;
 
-  @Column("text")
+  @Column()
   password: string;
 
   @Field(() => [Link])
