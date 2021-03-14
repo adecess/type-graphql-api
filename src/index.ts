@@ -7,15 +7,16 @@ import { InfoResolver } from "./resolvers/Info";
 import { Link } from "./entity/Link";
 import { FeedResolver } from "./resolvers/Feed";
 import { PostResolver } from "./resolvers/Post";
+import { User } from "./entity/User";
 
 const main = async () => {
   // db connection
   await createConnection({
     type: "postgres",
     url: "postgresql://postgres:postgres@localhost:5432/tgraphql",
-    logging: false,
+    logging: true,
     synchronize: true,
-    entities: [Link],
+    entities: [Link, User],
   });
 
   // app
