@@ -10,8 +10,7 @@ import { PostResolver } from "./resolvers/Post";
 import { User } from "./entity/User";
 import { AuthPayload } from "./entity/AuthPayload";
 import { UserResolver } from "./resolvers/User";
-import * as jwt from "jsonwebtoken";
-import { APP_SECRET } from "./utils";
+import { authChecker } from "./auth/auth-checker";
 
 const main = async () => {
   // db connection
@@ -31,26 +30,7 @@ const main = async () => {
     schema: await buildSchema({
       resolvers: [InfoResolver, FeedResolver, PostResolver, UserResolver],
       validate: false,
-      authChecker: ({ context }) => {
-        const authorization = context.req.headers.authorization;
-
-        if (!authorization) {
-          console.log("No token provided");
-          return false;
-        }
-
-        try {
-          const token = authorization.split(" ")[1];
-          const payload = jwt.verify(token, APP_SECRET);
-          context.payload = payload;
-
-          console.log("Authenticated user");
-          return true;
-        } catch (err) {
-          console.log("Access denied to unauthenticated user");
-          return false;
-        }
-      },
+      authChecker,
     }),
     context: ({ req, res }) => {
       const context = {
