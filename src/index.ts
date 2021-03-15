@@ -9,14 +9,16 @@ import { FeedResolver } from "./resolvers/Feed";
 import { PostResolver } from "./resolvers/Post";
 import { User } from "./entity/User";
 import { AuthPayload } from "./entity/AuthPayload";
-import { SignUpResolver } from "./resolvers/SignUp";
+import { UserResolver } from "./resolvers/User";
+import * as jwt from "jsonwebtoken";
+import { APP_SECRET } from "./utils";
 
 const main = async () => {
   // db connection
   await createConnection({
     type: "postgres",
     url: "postgresql://postgres:postgres@localhost:5432/tgraphql",
-    logging: true,
+    logging: false,
     synchronize: true,
     entities: [Link, User, AuthPayload],
   });
@@ -27,9 +29,34 @@ const main = async () => {
   // Apollo
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [InfoResolver, FeedResolver, PostResolver, SignUpResolver],
+      resolvers: [InfoResolver, FeedResolver, PostResolver, UserResolver],
       validate: false,
+      authChecker: ({ context }) => {
+        const authorization = context.req.headers.authorization;
+
+        if (!authorization) {
+          console.log("No token provided");
+          return false;
+        }
+
+        try {
+          const token = authorization.split(" ")[1];
+          jwt.verify(token, APP_SECRET);
+
+          console.log("Authenticated user");
+          return true;
+        } catch (err) {
+          console.log("Access denied to unauthenticated user");
+          return false;
+        }
+      },
     }),
+    context: ({ req }) => {
+      const context = {
+        req,
+      };
+      return context;
+    },
   });
 
   apolloServer.applyMiddleware({ app });
