@@ -41,7 +41,8 @@ const main = async () => {
 
         try {
           const token = authorization.split(" ")[1];
-          jwt.verify(token, APP_SECRET);
+          const payload = jwt.verify(token, APP_SECRET);
+          context.payload = payload;
 
           console.log("Authenticated user");
           return true;
@@ -51,9 +52,10 @@ const main = async () => {
         }
       },
     }),
-    context: ({ req }) => {
+    context: ({ req, res }) => {
       const context = {
         req,
+        res,
       };
       return context;
     },

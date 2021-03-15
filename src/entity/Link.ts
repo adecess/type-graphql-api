@@ -23,7 +23,7 @@ export class Link extends BaseEntity {
   @Column()
   url: string;
 
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.links, { eager: true })
   user: User;
 }

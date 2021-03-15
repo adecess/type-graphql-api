@@ -5,7 +5,7 @@ import { Link } from "../entity/Link";
 export class FeedResolver {
   @Authorized()
   @Query(() => [Link])
-  async feed(): Promise<Link[] | []> {
+  async feed(): Promise<Link[]> {
     const links = await Link.find();
     return links;
   }
