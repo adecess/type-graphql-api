@@ -19,7 +19,7 @@ export const authChecker: AuthChecker<MyContext> = ({ context }) => {
     console.log("Authenticated user");
     return true;
   } catch (err) {
-    console.log("Access denied to unauthenticated user");
+    console.log("Access denied - Not authorized");
     return false;
   }
 };
